@@ -1,6 +1,5 @@
 import { baseApi } from "../../api/baseApi";
 
-// userApi.ts
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({

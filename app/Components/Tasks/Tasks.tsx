@@ -35,6 +35,7 @@ export default function Tasks() {
   const { data: tasksData, isLoading, isError, refetch } = useGetAllTasksQuery({
     page,
     limit,
+    sortOrder: 'asc',
     search: searchTerm || undefined,
     status: statusFilter || undefined,
   });

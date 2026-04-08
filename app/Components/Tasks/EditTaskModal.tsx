@@ -1,7 +1,8 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,17 +17,30 @@ export default function EditTaskModal({ open, setOpen, task }: any) {
   const [updateTask] = useUpdateTaskMutation();
   const { data: usersData } = useGetUsersQuery(undefined);
 
-  // Initialize form directly from task prop
-  const [form, setForm] = useState(() => ({
-    title: task?.title || "",
-    description: task?.description || "",
-    assignedUserId: task?.assignedUserId || "",
-  }));
+  const [form, setForm] = useState({
+    title: "",
+    description: "",
+    assignedUserId: "",
+  });
 
-  // Reset form when task changes by re-initializing state
-  // This uses the fact that React will re-mount components with different keys
+  // Update form when task changes
+  useEffect(() => {
+    if (task) {
+      setForm({
+        title: task.title || "",
+        description: task.description || "",
+        assignedUserId: task.assignedUserId || "",
+      });
+    }
+  }, [task]); // This will run whenever task prop changes
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    if (!task?.id) {
+      toast.error("No task selected");
+      return;
+    }
 
     try {
       await updateTask({
@@ -44,24 +58,16 @@ export default function EditTaskModal({ open, setOpen, task }: any) {
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (!isOpen) {
-      // Reset form when modal closes
+      // Reset form when closing
       setForm({
         title: "",
         description: "",
         assignedUserId: "",
       });
-    } else if (task) {
-      // Reset form when modal opens with new task
-      setForm({
-        title: task.title || "",
-        description: task.description || "",
-        assignedUserId: task.assignedUserId || "",
-      });
     }
   };
 
-  if (!task) return null;
-
+  // Don't render if no task (but keep the dialog for closing animation)
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
@@ -69,57 +75,62 @@ export default function EditTaskModal({ open, setOpen, task }: any) {
           <DialogTitle>Edit Task</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <input
-            value={form.title}
-            onChange={(e) =>
-              setForm({ ...form, title: e.target.value })
-            }
-            className="w-full border p-2 rounded"
-            placeholder="Title"
-          />
+        {task ? (
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <input
+              value={form.title}
+              onChange={(e) =>
+                setForm({ ...form, title: e.target.value })
+              }
+              className="w-full border p-2 rounded"
+              placeholder="Title"
+              required
+            />
 
-          <textarea
-            value={form.description}
-            onChange={(e) =>
-              setForm({ ...form, description: e.target.value })
-            }
-            className="w-full border p-2 rounded"
-            placeholder="Description"
-          />
+            <textarea
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+              className="w-full border p-2 rounded"
+              placeholder="Description"
+              rows={3}
+            />
 
-          <select
-            value={form.assignedUserId}
-            onChange={(e) =>
-              setForm({ ...form, assignedUserId: e.target.value })
-            }
-            className="w-full border p-2 rounded"
-          >
-            <option value="">Unassigned</option>
-
-            {usersData?.data?.map((user: any) => (
-              <option key={user.id} value={user.id}>
-                {user.name} ({user.role})
-              </option>
-            ))}
-          </select>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="px-4 py-2 border rounded hover:bg-gray-50"
+            <select
+              value={form.assignedUserId}
+              onChange={(e) =>
+                setForm({ ...form, assignedUserId: e.target.value })
+              }
+              className="w-full border p-2 rounded"
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Update
-            </button>
-          </div>
-        </form>
+              <option value="">Unassigned</option>
+              {usersData?.data?.map((user: any) => (
+                <option key={user.id} value={user.id}>
+                  {user.name} ({user.role})
+                </option>
+              ))}
+            </select>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="px-4 py-2 border rounded hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              >
+                Update
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="py-4 text-center text-gray-500">Loading task data...</div>
+        )}
       </DialogContent>
     </Dialog>
   );

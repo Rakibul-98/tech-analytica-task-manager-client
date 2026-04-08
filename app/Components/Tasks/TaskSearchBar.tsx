@@ -38,10 +38,10 @@ export default function TaskSearchBar({
         <select
           value={statusFilter}
           onChange={(e) => onStatusFilterChange(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 cursor-pointer"
         >
           {statusOptions.map((option: any) => (
-            <option key={option.value} value={option.value}>
+            <option className='cursor-pointer' key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}

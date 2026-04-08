@@ -53,10 +53,10 @@ export default function CreateTaskModal({ open, setOpen }: any) {
           />
 
           <div className="flex justify-end gap-2">
-            <button type="button" onClick={() => setOpen(false)}>
+            <button className="border px-4 py-2 rounded cursor-pointer" type="button" onClick={() => setOpen(false)}>
               Cancel
             </button>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded cursor-pointer">
               Create
             </button>
           </div>

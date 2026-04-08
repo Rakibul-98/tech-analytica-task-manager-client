@@ -3,7 +3,7 @@ import { CheckCheck, Clock, Layers, Users2 } from "lucide-react";
 
 export default function DashboardStats({ tasks, totalUser, isAdmin }: any) {
 
-  const totalTask = tasks.meta.total;
+  const totalTask = tasks?.meta?.total || 0;
 
   const processingTasks = tasks?.data?.filter(
     (task: any) => task.status === "PROCESSING"

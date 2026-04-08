@@ -6,7 +6,7 @@ export default function DeleteConfirmationModal({ onDelete, taskId }: any) {
   return (
 
     <AlertDialog>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger className="cursor-pointer">
         <Trash2 size={18} />
       </AlertDialogTrigger>
 
@@ -19,10 +19,10 @@ export default function DeleteConfirmationModal({ onDelete, taskId }: any) {
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => onDelete(taskId)}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-red-600 hover:bg-red-700 cursor-pointer"
           >
             Delete
           </AlertDialogAction>

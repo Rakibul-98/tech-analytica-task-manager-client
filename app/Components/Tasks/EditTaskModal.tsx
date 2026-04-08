@@ -23,7 +23,6 @@ export default function EditTaskModal({ open, setOpen, task }: any) {
     assignedUserId: "",
   });
 
-  // Update form when task changes
   useEffect(() => {
     if (task) {
       setForm({
@@ -32,7 +31,7 @@ export default function EditTaskModal({ open, setOpen, task }: any) {
         assignedUserId: task.assignedUserId || "",
       });
     }
-  }, [task]); // This will run whenever task prop changes
+  }, [task]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -58,7 +57,6 @@ export default function EditTaskModal({ open, setOpen, task }: any) {
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (!isOpen) {
-      // Reset form when closing
       setForm({
         title: "",
         description: "",
@@ -67,7 +65,6 @@ export default function EditTaskModal({ open, setOpen, task }: any) {
     }
   };
 
-  // Don't render if no task (but keep the dialog for closing animation)
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
@@ -116,13 +113,13 @@ export default function EditTaskModal({ open, setOpen, task }: any) {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="px-4 py-2 border rounded hover:bg-gray-50"
+                className="px-4 py-2 border rounded hover:bg-gray-50 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >
                 Update
               </button>

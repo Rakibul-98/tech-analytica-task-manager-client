@@ -63,7 +63,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props} className="border-none shadow-lg bg-gray-50">
-      <SidebarHeader className="text-xl font-semibold text-center py-4 text-blue-600">
+      <SidebarHeader className="text-xl font-semibold text-center py-4 text-blue-600 group-data-[collapsible=icon]:hidden">
         {isAdmin ? "Admin Dashboard" : "User Dashboard"}
       </SidebarHeader>
 

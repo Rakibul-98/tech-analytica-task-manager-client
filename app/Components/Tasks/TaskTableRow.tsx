@@ -102,7 +102,7 @@ export default function TaskTableRow({
           {onView && (
             <button
               onClick={() => onView(task)}
-              className="text-blue-600 hover:text-blue-900 transition-colors"
+              className="cursor-pointer"
               title="View Details"
             >
               <Eye size={18} />
@@ -113,7 +113,7 @@ export default function TaskTableRow({
               {onEdit && (
                 <button
                   onClick={() => onEdit(task)}
-                  className="text-green-600 hover:text-green-900 transition-colors"
+                  className=" cursor-pointer"
                   title="Edit"
                 >
                   <Edit size={18} />

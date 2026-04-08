@@ -10,8 +10,9 @@ import { TaskStatus } from "../../../redux/features/task/task.type";
 import EditTaskModal from "../Tasks/EditTaskModal";
 import ViewTaskModal from "../Tasks/ViewTaskModal";
 import TaskTable from "../Tasks/TaskTable";
+import TasksSkeleton from "../Tasks/TasksSkeleton";
 
-export default function RecentTasks({ tasks }: any) {
+export default function RecentTasks({ tasks, isLoading }: any) {
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
   const [deleteTask] = useDeleteTaskMutation();
 
@@ -61,15 +62,23 @@ export default function RecentTasks({ tasks }: any) {
         </h2>
       </div>
 
-      <TaskTable
-        tasks={recentTasks}
-        onStatusChange={handleStatusChange}
-        onDelete={handleDeleteTask}
-        onView={handleViewTask}
-        onEdit={handleEditTask}
-        emptyMessage="No tasks found"
-        showPagination={false}
-      />
+
+
+      {
+        isLoading ? (
+          <TasksSkeleton />
+        ) : (
+          <TaskTable
+            tasks={recentTasks}
+            onStatusChange={handleStatusChange}
+            onDelete={handleDeleteTask}
+            onView={handleViewTask}
+            onEdit={handleEditTask}
+            emptyMessage="No tasks found"
+            showPagination={false}
+          />
+        )
+      }
 
       <EditTaskModal
         open={openEdit}

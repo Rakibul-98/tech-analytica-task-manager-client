@@ -2,11 +2,9 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Loader2,
-} from "lucide-react";
 import { useGetAuditLogsQuery } from "../../../redux/features/audit/auditApi";
 import AuditTable from "./AuditTable";
+import TasksSkeleton from "../Tasks/TasksSkeleton";
 
 export default function AuditLog() {
   const [page, setPage] = useState(1);
@@ -26,16 +24,6 @@ export default function AuditLog() {
     setLimit(Number(e.target.value));
     setPage(1);
   };
-
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-40">
-        <Loader2 className="animate-spin" />
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className="text-center py-10 text-red-500">
@@ -62,32 +50,36 @@ export default function AuditLog() {
           <select
             value={limit}
             onChange={handleLimitChange}
-            className="border px-3 py-2 rounded-md text-sm"
+            className="border px-3 py-2 rounded-md text-sm cursor-pointer"
           >
             <option value={5}>5 / page</option>
             <option value={10}>10 / page</option>
             <option value={20}>20 / page</option>
           </select>
-
-          <button
-            onClick={() => refetch()}
-            className="px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-          >
-            Refresh
-          </button>
         </div>
       </div>
 
-      <AuditTable
-        activities={activities}
-        meta={data?.meta}
-        totalPages={totalPages}
-        showPagination={true}
-        onPageChange={(newPage: any) => {
-          setPage(newPage);
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }}
-      />
+      {
+        isLoading ? (
+          <>
+            <TasksSkeleton />
+            <TasksSkeleton />
+          </>
+        ) : (
+          <AuditTable
+            activities={activities}
+            meta={data?.meta}
+            totalPages={totalPages}
+            showPagination={true}
+            onPageChange={(newPage: any) => {
+              setPage(newPage);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
+        )
+      }
+
+
     </div>
   );
 }

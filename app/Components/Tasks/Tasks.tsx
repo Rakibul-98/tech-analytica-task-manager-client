@@ -20,6 +20,7 @@ import EditTaskModal from './EditTaskModal';
 import ViewTaskModal from './ViewTaskModal';
 import TaskTable from './TaskTable';
 import { useAppSelector } from '../../../redux/hooks';
+import TasksSkeleton from './TasksSkeleton';
 
 export default function Tasks() {
   const [page, setPage] = useState(1);
@@ -77,13 +78,6 @@ export default function Tasks() {
     setOpenEdit(true);
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
 
   if (isError) {
     return (
@@ -112,7 +106,7 @@ export default function Tasks() {
           {
             isAdmin && <button
               onClick={() => setOpenCreate(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer"
             >
               Create New Task
             </button>
@@ -131,20 +125,28 @@ export default function Tasks() {
         />
       </div>
 
-      <TaskTable
-        tasks={tasks}
-        onStatusChange={handleStatusChange}
-        onDelete={handleDeleteTask}
-        onView={handleViewTask}
-        onEdit={handleEditTask}
-        isLoading={isLoading}
-        showPagination={true}
-        currentPage={page}
-        totalPages={totalPages}
-        totalItems={totalTasks}
-        itemsPerPage={limit}
-        onPageChange={handlePageChange}
-      />
+
+
+      {
+        isLoading ? (
+          <TasksSkeleton />
+        ) : (
+          <TaskTable
+            tasks={tasks}
+            onStatusChange={handleStatusChange}
+            onDelete={handleDeleteTask}
+            onView={handleViewTask}
+            onEdit={handleEditTask}
+            isLoading={isLoading}
+            showPagination={true}
+            currentPage={page}
+            totalPages={totalPages}
+            totalItems={totalTasks}
+            itemsPerPage={limit}
+            onPageChange={handlePageChange}
+          />
+        )
+      }
 
       <CreateTaskModal open={openCreate} setOpen={setOpenCreate} />
 

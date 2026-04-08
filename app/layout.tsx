@@ -34,7 +34,7 @@ export default function RootLayout({
         <Toaster richColors position="top-center" />
         <TooltipProvider>
           <main className="min-h-full flex flex-col w-full">
-            <div className="flex-1">
+            <div className="flex-1 ">
               <Providers>{children}</Providers>
             </div>
           </main>

@@ -1,38 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Edit, Trash2 } from 'lucide-react';
+import { formatDateTime, getStatusColor } from '../../utils/task.utils';
 
 export default function RecentTasks({ tasks }: any) {
-  // Get the 5 most recent tasks (sorted by createdAt in descending order)
   const recentTasks = tasks?.data
     ? [...tasks.data]
       .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 5)
     : [];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'DONE':
-        return 'bg-green-100 text-green-800';
-      case 'PROCESSING':
-        return 'bg-blue-100 text-blue-800';
-      case 'PENDING':
-        return 'bg-yellow-100 text-yellow-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
-    });
-  };
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">

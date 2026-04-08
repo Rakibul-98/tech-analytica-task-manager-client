@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CheckCheck, Clock, Layers, Users2 } from "lucide-react";
 
-export default function DashboardStats({ tasks }: any) {
+export default function DashboardStats({ tasks, totalUser }: any) {
 
   const totalTask = tasks.meta.total;
 
@@ -32,7 +32,7 @@ export default function DashboardStats({ tasks }: any) {
     },
     {
       title: "Total Users",
-      value: "1",
+      value: totalUser,
       icon: <Users2 size={30} />
     }
   ]

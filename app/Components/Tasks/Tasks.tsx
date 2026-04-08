@@ -12,41 +12,52 @@ import { TaskStatus } from '../../../redux/features/task/task.type';
 import {
   handleStatusChange as handleStatusChangeUtil,
   handleDeleteTask as handleDeleteTaskUtil,
-  handleSearch as handleSearchUtil,
-  handleFilterChange as handleFilterChangeUtil
+  handleSearch as handleSearchUtil
 } from '../../utils/task.utils';
 import TaskSearchBar from './TaskSearchBar';
 import TaskTableRow from './TaskTableRow';
 import Pagination from '../shared/Pagination';
+import CreateTaskModal from './CreateTaskModal';
+import EditTaskModal from './EditTaskModal';
+import ViewTaskModal from './ViewTaskModal';
 
 export default function Tasks() {
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
-  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [limit, setLimit] = useState(10);
+  const [statusFilter, setStatusFilter] = useState<TaskStatus | ''>('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [openCreate, setOpenCreate] = useState(false);
+  const [editingTask, setEditingTask] = useState<any>(null);
+  const [viewTask, setViewTask] = useState<any>(null);
+  const [openView, setOpenView] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
   const { data: tasksData, isLoading, isError, refetch } = useGetAllTasksQuery({
     page,
+    limit,
     search: searchTerm || undefined,
+    status: statusFilter || undefined,
   });
 
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
   const [deleteTask] = useDeleteTaskMutation();
 
   const handleStatusChange = (taskId: string, newStatus: TaskStatus) => {
-    handleStatusChangeUtil(taskId, newStatus, updateTaskStatus, refetch);
+    handleStatusChangeUtil(taskId, newStatus, updateTaskStatus);
   };
 
   const handleDeleteTask = (taskId: string) => {
-    handleDeleteTaskUtil(taskId, deleteTask, refetch);
+    handleDeleteTaskUtil(taskId, deleteTask);
   };
 
   const handleSearch = (e: React.FormEvent) => {
-    handleSearchUtil(e, setPage, refetch);
+    handleSearchUtil(e, setPage);
   };
 
   const handleFilterChange = (value: string) => {
-    handleFilterChangeUtil(value, setStatusFilter, setPage);
+    const validStatus = value as TaskStatus | '';
+    setStatusFilter(validStatus);
+    setPage(1);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -55,11 +66,13 @@ export default function Tasks() {
   };
 
   const handleViewTask = (task: any) => {
-    console.log('View task:', task);
+    setViewTask(task);
+    setOpenView(true);
   };
 
   const handleEditTask = (task: any) => {
-    console.log('Edit task:', task);
+    setEditingTask(task);
+    setOpenEdit(true);
   };
 
   if (isLoading) {
@@ -90,9 +103,18 @@ export default function Tasks() {
   const totalPages = Math.ceil(totalTasks / limit);
 
   return (
-    <div className="p-6">
+    <div className="">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Tasks Management</h1>
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Manage tasks</h1>
+          <button
+            onClick={() => setOpenCreate(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            + Create Task
+          </button>
+
+        </div>
 
         <TaskSearchBar
           searchTerm={searchTerm}
@@ -100,7 +122,8 @@ export default function Tasks() {
           onSearchSubmit={handleSearch}
           statusFilter={statusFilter}
           onStatusFilterChange={handleFilterChange}
-          onRefresh={() => refetch()}
+          limit={limit}
+          setLimit={setLimit}
         />
       </div>
 
@@ -139,7 +162,7 @@ export default function Tasks() {
             </tbody>
           </table>
         </div>
-
+        <CreateTaskModal open={openCreate} setOpen={setOpenCreate} />
         {totalTasks > 0 && (
           <Pagination
             currentPage={page}
@@ -150,6 +173,17 @@ export default function Tasks() {
           />
         )}
       </div>
+      <ViewTaskModal
+        open={openView}
+        setOpen={setOpenView}
+        task={viewTask}
+      />
+
+      <EditTaskModal
+        open={openEdit}
+        setOpen={setOpenEdit}
+        task={editingTask}
+      />
     </div>
   );
 }

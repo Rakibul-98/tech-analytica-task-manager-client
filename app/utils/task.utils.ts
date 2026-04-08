@@ -6,41 +6,30 @@ export const handleStatusChange = async (
   taskId: string,
   newStatus: TaskStatus,
   updateTaskStatus: any,
-  refetch: any,
 ) => {
   try {
     await updateTaskStatus({ taskId, data: { status: newStatus } }).unwrap();
     toast.success("Task status updated successfully");
-    refetch();
   } catch (error: any) {
     toast.error(error?.data?.message || "Failed to update task status");
   }
 };
 
-export const handleDeleteTask = async (
-  taskId: string,
-  deleteTask: any,
-  refetch: any,
-) => {
-  if (window.confirm("Are you sure you want to delete this task?")) {
-    try {
-      await deleteTask(taskId).unwrap();
-      toast.success("Task deleted successfully");
-      refetch();
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to delete task");
-    }
+export const handleDeleteTask = async (taskId: string, deleteTask: any) => {
+  try {
+    await deleteTask(taskId).unwrap();
+    toast.success("Task deleted successfully");
+  } catch (error: any) {
+    toast.error(error?.data?.message || "Failed to delete task");
   }
 };
 
 export const handleSearch = (
   e: React.FormEvent,
   setPage: React.Dispatch<React.SetStateAction<number>>,
-  refetch: any,
 ) => {
   e.preventDefault();
   setPage(1);
-  refetch();
 };
 
 export const handleFilterChange = (

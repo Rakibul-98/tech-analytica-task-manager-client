@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { RefreshCw } from 'lucide-react';
 import { statusOptions } from '../../utils/task.utils';
 
 interface TaskSearchBarProps {
@@ -9,7 +8,9 @@ interface TaskSearchBarProps {
   onSearchSubmit: (e: React.FormEvent) => void;
   statusFilter: string;
   onStatusFilterChange: (value: string) => void;
-  onRefresh: () => void;
+  limit: number;
+  setLimit: (value: number) => void;
+
 }
 
 export default function TaskSearchBar({
@@ -18,7 +19,8 @@ export default function TaskSearchBar({
   onSearchSubmit,
   statusFilter,
   onStatusFilterChange,
-  onRefresh
+  limit,
+  setLimit,
 }: TaskSearchBarProps) {
   return (
     <div className="flex flex-col md:flex-row gap-4 justify-between">
@@ -44,14 +46,19 @@ export default function TaskSearchBar({
             </option>
           ))}
         </select>
+        <div>
+          <input
+            id="limit"
+            type="number"
+            min="1"
+            max="100"
+            value={limit}
 
-        <button
-          onClick={onRefresh}
-          className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
-          title="Refresh"
-        >
-          <RefreshCw size={20} />
-        </button>
+            onChange={(e) => setLimit(Number(e.target.value))}
+            className="w-20 px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 text-center"
+          />
+          <span className="ms-2 text-gray-600">Per page</span>
+        </div>
       </div>
     </div>
   );

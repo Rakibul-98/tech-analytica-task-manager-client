@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { Eye, Edit, Trash2 } from 'lucide-react';
+import { Eye, Edit } from 'lucide-react';
 import { TaskStatus } from '../../../redux/features/task/task.type';
 import { formatDateTime, getStatusColor } from '../../utils/task.utils';
+import { useGetUsersQuery } from '../../../redux/features/user/userApi';
+import { useUpdateTaskMutation } from '../../../redux/features/task/taskApi';
+import { toast } from 'sonner';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 interface TaskTableRowProps {
   task: any;
@@ -19,6 +22,23 @@ export default function TaskTableRow({
   onView,
   onEdit
 }: TaskTableRowProps) {
+
+  const { data: usersData } = useGetUsersQuery(undefined);
+  const [updateTask, { isLoading }] = useUpdateTaskMutation();
+
+  const handleAssignUser = async (userId: string) => {
+    try {
+      await updateTask({
+        taskId: task.id,
+        data: { assignedUserId: userId },
+      }).unwrap();
+
+      toast.success("User assigned successfully");
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to assign user");
+    }
+  };
+
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       <td className="px-6 py-4">
@@ -30,6 +50,7 @@ export default function TaskTableRow({
       <td className="px-6 py-4 whitespace-nowrap">
         <select
           value={task.status}
+          disabled={isLoading}
           onChange={(e) => onStatusChange(task.id, e.target.value as TaskStatus)}
           className={`px-2 py-1 text-xs leading-5 font-semibold rounded-full border-0 focus:ring-2 focus:ring-blue-500 cursor-pointer ${getStatusColor(task.status)}`}
         >
@@ -39,14 +60,30 @@ export default function TaskTableRow({
         </select>
       </td>
       <td className="px-6 py-4">
-        {task.assignedUser ? (
-          <>
-            <div className="text-sm text-gray-900">{task.assignedUser.name}</div>
-            <div className="text-sm text-gray-500">{task.assignedUser.email}</div>
-          </>
-        ) : (
-          <div className="text-sm text-gray-500">Unassigned</div>
-        )}
+        <td className="px-6 py-4">
+          {task.assignedUser ? (
+            <>
+              <div className="text-sm text-gray-900">{task.assignedUser.name}</div>
+              <div className="text-sm text-gray-500">{task.assignedUser.email}</div>
+            </>
+          ) : (
+            <select
+              onChange={(e) => handleAssignUser(e.target.value)}
+              defaultValue=""
+              className="text-sm border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="" disabled>
+                Assign user
+              </option>
+
+              {usersData?.data?.map((user: any) => (
+                <option key={user.id} value={user.id}>
+                  {user.name} ({user.role})
+                </option>
+              ))}
+            </select>
+          )}
+        </td>
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm text-gray-900">{formatDateTime(task.createdAt)}</div>
@@ -71,13 +108,7 @@ export default function TaskTableRow({
               <Edit size={18} />
             </button>
           )}
-          <button
-            onClick={() => onDelete(task.id)}
-            className="text-red-600 hover:text-red-900 transition-colors"
-            title="Delete"
-          >
-            <Trash2 size={18} />
-          </button>
+          <DeleteConfirmationModal onDelete={onDelete} taskId={task.id} />
         </div>
       </td>
     </tr>

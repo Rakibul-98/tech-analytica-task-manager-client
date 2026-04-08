@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CheckCheck, Clock, Layers, Users2 } from "lucide-react";
 
-export default function DashboardStats({ tasks, totalUser }: any) {
+export default function DashboardStats({ tasks, totalUser, isAdmin }: any) {
 
   const totalTask = tasks.meta.total;
 
@@ -14,28 +14,34 @@ export default function DashboardStats({ tasks, totalUser }: any) {
   ).length || 0;
 
 
-  const stats = [
+  const allStats = [
     {
       title: "Total Tasks",
       value: totalTask,
-      icon: <Layers size={30} />
+      icon: <Layers size={30} />,
+      showAlways: true
     },
     {
       title: "Pending Tasks",
       value: pendingTasks,
-      icon: <Clock size={30} />
+      icon: <Clock size={30} />,
+      showAlways: true
     },
     {
       title: "Processing Tasks",
       value: processingTasks,
-      icon: <CheckCheck size={30} />
+      icon: <CheckCheck size={30} />,
+      showAlways: true
     },
     {
       title: "Total Users",
       value: totalUser,
-      icon: <Users2 size={30} />
+      icon: <Users2 size={30} />,
+      showAlways: false
     }
-  ]
+  ];
+
+  const stats = allStats.filter(stat => stat.showAlways || isAdmin);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -51,5 +57,5 @@ export default function DashboardStats({ tasks, totalUser }: any) {
         </div>
       ))}
     </div>
-  )
+  );
 }

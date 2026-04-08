@@ -6,6 +6,7 @@ import { useGetUsersQuery } from '../../../redux/features/user/userApi';
 import { useUpdateTaskMutation } from '../../../redux/features/task/taskApi';
 import { toast } from 'sonner';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import { useAppSelector } from '../../../redux/hooks';
 
 interface TaskTableRowProps {
   task: any;
@@ -20,10 +21,16 @@ export default function TaskTableRow({
   onStatusChange,
   onDelete,
   onView,
-  onEdit
+  onEdit,
+
 }: TaskTableRowProps) {
 
-  const { data: usersData } = useGetUsersQuery(undefined);
+  const { user } = useAppSelector((state) => state.auth);
+  const isAdmin = user?.role === 'ADMIN';
+
+  const { data: usersData } = useGetUsersQuery(undefined, {
+    skip: !isAdmin,
+  });
   const [updateTask, { isLoading }] = useUpdateTaskMutation();
 
   const handleAssignUser = async (userId: string) => {
@@ -60,13 +67,13 @@ export default function TaskTableRow({
         </select>
       </td>
       <td className="px-6 py-4">
-        <td className="px-6 py-4">
-          {task.assignedUser ? (
-            <>
-              <div className="text-sm text-gray-900">{task.assignedUser.name}</div>
-              <div className="text-sm text-gray-500">{task.assignedUser.email}</div>
-            </>
-          ) : (
+        {task.assignedUser ? (
+          <>
+            <div className="text-sm text-gray-900">{task.assignedUser.name}</div>
+            <div className="text-sm text-gray-500">{task.assignedUser.email}</div>
+          </>
+        ) : (
+          isAdmin && (
             <select
               onChange={(e) => handleAssignUser(e.target.value)}
               defaultValue=""
@@ -75,21 +82,23 @@ export default function TaskTableRow({
               <option value="" disabled>
                 Assign user
               </option>
-
               {usersData?.data?.map((user: any) => (
                 <option key={user.id} value={user.id}>
                   {user.name} ({user.role})
                 </option>
               ))}
             </select>
-          )}
-        </td>
+          )
+        )}
+        {!task.assignedUser && !isAdmin && (
+          <div className="text-sm text-gray-500">Not assigned</div>
+        )}
       </td>
       <td className="px-6 py-4 whitespace-nowrap">
         <div className="text-sm text-gray-900">{formatDateTime(task.createdAt)}</div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-        <div className="flex gap-2">
+        <div className="flex justify-center gap-2">
           {onView && (
             <button
               onClick={() => onView(task)}
@@ -99,16 +108,20 @@ export default function TaskTableRow({
               <Eye size={18} />
             </button>
           )}
-          {onEdit && (
-            <button
-              onClick={() => onEdit(task)}
-              className="text-green-600 hover:text-green-900 transition-colors"
-              title="Edit"
-            >
-              <Edit size={18} />
-            </button>
+          {isAdmin && (
+            <>
+              {onEdit && (
+                <button
+                  onClick={() => onEdit(task)}
+                  className="text-green-600 hover:text-green-900 transition-colors"
+                  title="Edit"
+                >
+                  <Edit size={18} />
+                </button>
+              )}
+              <DeleteConfirmationModal onDelete={onDelete} taskId={task.id} />
+            </>
           )}
-          <DeleteConfirmationModal onDelete={onDelete} taskId={task.id} />
         </div>
       </td>
     </tr>

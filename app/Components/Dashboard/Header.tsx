@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
-import { useAppSelector } from '../../../redux/hooks';
 import { useEffect, useState } from 'react';
 import { useGetAllTasksQuery } from '../../../redux/features/task/taskApi';
 import EditTaskModal from '../Tasks/EditTaskModal';
 import { Search } from 'lucide-react';
 
-export default function Header() {
-  const { user } = useAppSelector((state) => state.auth);
+export default function Header({ user }: any) {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedTask, setSelectedTask] = useState<any>(null);

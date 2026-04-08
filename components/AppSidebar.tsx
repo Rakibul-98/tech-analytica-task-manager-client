@@ -10,10 +10,12 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar"
 import { LogOut, Monitor, ShieldCogCorner, Users2, Workflow } from "lucide-react"
-import { useAppDispatch } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { logout } from "../redux/features/auth/authSlice";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
+
+// ... imports remain the same
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
@@ -21,30 +23,33 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const data = {
-    navMain: [
-      {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: Monitor,
-      },
-      {
-        title: "Tasks",
-        url: "/tasks",
-        icon: Workflow,
-      },
+  const { user } = useAppSelector((state) => state.auth);
+  const isAdmin = user?.role === 'ADMIN';
+
+  const navMain = [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: Monitor,
+    },
+    {
+      title: "Tasks",
+      url: "/tasks",
+      icon: Workflow,
+    },
+    ...(isAdmin ? [
       {
         title: "Audit Log",
         url: "/audit-log",
         icon: ShieldCogCorner,
       },
       {
-        title: "User Management",
-        url: "/user-management",
+        title: "Users",
+        url: "/users",
         icon: Users2,
       }
-    ]
-  }
+    ] : [])
+  ];
 
   const handleLogout = () => {
     dispatch(logout());
@@ -58,12 +63,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props} className="border-none shadow-lg bg-gray-50">
-      <SidebarHeader>
-        Task Manager
+      <SidebarHeader className="text-xl font-semibold text-center py-4 text-blue-600">
+        {isAdmin ? "Admin Dashboard" : "User Dashboard"}
       </SidebarHeader>
 
       <SidebarContent>
-        {data.navMain.map((item) => (
+        {navMain.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupContent>
               <SidebarMenu>

@@ -7,12 +7,7 @@ export default function DeleteConfirmationModal({ onDelete, taskId }: any) {
 
     <AlertDialog>
       <AlertDialogTrigger>
-        <button
-          className="text-red-600 hover:text-red-900 transition-colors"
-          title="Delete"
-        >
-          <Trash2 size={18} />
-        </button>
+        <Trash2 size={18} />
       </AlertDialogTrigger>
 
       <AlertDialogContent>

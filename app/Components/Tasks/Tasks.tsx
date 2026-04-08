@@ -19,6 +19,7 @@ import CreateTaskModal from './CreateTaskModal';
 import EditTaskModal from './EditTaskModal';
 import ViewTaskModal from './ViewTaskModal';
 import TaskTable from './TaskTable';
+import { useAppSelector } from '../../../redux/hooks';
 
 export default function Tasks() {
   const [page, setPage] = useState(1);
@@ -30,7 +31,8 @@ export default function Tasks() {
   const [viewTask, setViewTask] = useState<any>(null);
   const [openView, setOpenView] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-
+  const { user } = useAppSelector((state) => state.auth);
+  const isAdmin = user?.role === 'ADMIN';
   const { data: tasksData, isLoading, isError, refetch } = useGetAllTasksQuery({
     page,
     limit,
@@ -107,12 +109,14 @@ export default function Tasks() {
       <div className="mb-6">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">Manage tasks</h1>
-          <button
-            onClick={() => setOpenCreate(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Create New Task
-          </button>
+          {
+            isAdmin && <button
+              onClick={() => setOpenCreate(true)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+              Create New Task
+            </button>
+          }
 
         </div>
 

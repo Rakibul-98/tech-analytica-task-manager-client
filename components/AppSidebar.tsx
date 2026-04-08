@@ -34,8 +34,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: Workflow,
       },
       {
-        title: "Audit Logs",
-        url: "/audit-logs",
+        title: "Audit Log",
+        url: "/audit-log",
         icon: ShieldCogCorner,
       },
       {

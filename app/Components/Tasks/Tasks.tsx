@@ -15,11 +15,10 @@ import {
   handleSearch as handleSearchUtil
 } from '../../utils/task.utils';
 import TaskSearchBar from './TaskSearchBar';
-import TaskTableRow from './TaskTableRow';
-import Pagination from '../shared/Pagination';
 import CreateTaskModal from './CreateTaskModal';
 import EditTaskModal from './EditTaskModal';
 import ViewTaskModal from './ViewTaskModal';
+import TaskTable from './TaskTable';
 
 export default function Tasks() {
   const [page, setPage] = useState(1);
@@ -112,7 +111,7 @@ export default function Tasks() {
             onClick={() => setOpenCreate(true)}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            + Create Task
+            Create New Task
           </button>
 
         </div>
@@ -128,52 +127,24 @@ export default function Tasks() {
         />
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned To</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {tasks.length > 0 ? (
-                tasks.map((task: any) => (
-                  <TaskTableRow
-                    key={task.id}
-                    task={task}
-                    onStatusChange={handleStatusChange}
-                    onDelete={handleDeleteTask}
-                    onView={handleViewTask}
-                    onEdit={handleEditTask}
-                  />
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                    No tasks found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <CreateTaskModal open={openCreate} setOpen={setOpenCreate} />
-        {totalTasks > 0 && (
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            totalItems={totalTasks}
-            itemsPerPage={limit}
-            onPageChange={handlePageChange}
-          />
-        )}
-      </div>
+      <TaskTable
+        tasks={tasks}
+        onStatusChange={handleStatusChange}
+        onDelete={handleDeleteTask}
+        onView={handleViewTask}
+        onEdit={handleEditTask}
+        isLoading={isLoading}
+        showPagination={true}
+        currentPage={page}
+        totalPages={totalPages}
+        totalItems={totalTasks}
+        itemsPerPage={limit}
+        onPageChange={handlePageChange}
+      />
+
+      <CreateTaskModal open={openCreate} setOpen={setOpenCreate} />
+
+
       <ViewTaskModal
         open={openView}
         setOpen={setOpenView}

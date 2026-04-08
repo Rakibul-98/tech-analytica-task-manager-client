@@ -7,9 +7,9 @@ import {
   useDeleteTaskMutation,
 } from "../../../redux/features/task/taskApi";
 import { TaskStatus } from "../../../redux/features/task/task.type";
-import TaskTableRow from "../Tasks/TaskTableRow";
 import EditTaskModal from "../Tasks/EditTaskModal";
 import ViewTaskModal from "../Tasks/ViewTaskModal";
+import TaskTable from "../Tasks/TaskTable";
 
 export default function RecentTasks({ tasks }: any) {
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
@@ -61,44 +61,15 @@ export default function RecentTasks({ tasks }: any) {
         </h2>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Assigned</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody className="bg-white divide-y divide-gray-200">
-            {recentTasks.length > 0 ? (
-              recentTasks.map((task: any) => (
-                <TaskTableRow
-                  key={task.id}
-                  task={task}
-                  onStatusChange={handleStatusChange}
-                  onDelete={handleDeleteTask}
-                  onEdit={handleEditTask}
-                  onView={handleViewTask}
-                />
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan={6}
-                  className="px-6 py-8 text-center text-gray-500"
-                >
-                  No tasks found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <TaskTable
+        tasks={recentTasks}
+        onStatusChange={handleStatusChange}
+        onDelete={handleDeleteTask}
+        onView={handleViewTask}
+        onEdit={handleEditTask}
+        emptyMessage="No tasks found"
+        showPagination={false}
+      />
 
       <EditTaskModal
         open={openEdit}

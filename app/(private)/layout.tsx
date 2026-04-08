@@ -17,7 +17,7 @@ export default function PrivateLayout({
       <AppSidebar />
       <main className="min-h-full flex flex-col w-full">
         <SidebarTrigger />
-        <div className="flex-1 bg-linear-to-b from-white to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="flex-1 bg-linear-to-b from-white to-indigo-100 py-12 pt-5 px-4 sm:px-6 lg:px-8">
           <Providers>{children}</Providers>
         </div>
       </main>

@@ -59,13 +59,12 @@ export default function Header() {
 
           <button
             type='submit'
-            className='px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-e-lg hover:bg-blue-700 focus:outline-none focus:ring-0'
+            className='px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-e-lg hover:bg-blue-700 focus:outline-none focus:ring-0 cursor-pointer'
           >
             Search
           </button>
         </form>
 
-        {/* Error message */}
         {errors.searchQuery && (
           <p className='text-red-500 text-xs mt-1 absolute'>
             {errors.searchQuery.message}

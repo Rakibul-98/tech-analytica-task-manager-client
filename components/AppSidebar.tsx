@@ -92,7 +92,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 justify-center px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer"
+          className="w-full flex items-center gap-3 justify-center px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer mb-2"
         >
           <span><LogOut size={16} /></span>
           <span className="group-data-[collapsible=icon]:hidden">Logout</span>

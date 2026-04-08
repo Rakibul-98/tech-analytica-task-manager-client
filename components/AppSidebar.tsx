@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar"
-import { CheckCheck, LogOut, Monitor, Users2, Workflow } from "lucide-react"
+import { LogOut, Monitor, ShieldCogCorner, Users2, Workflow } from "lucide-react"
 import { useAppDispatch } from "../redux/hooks";
 import { logout } from "../redux/features/auth/authSlice";
 import { toast } from "sonner";
@@ -36,7 +36,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: "Audit Logs",
         url: "/audit-logs",
-        icon: CheckCheck,
+        icon: ShieldCogCorner,
       },
       {
         title: "User Management",

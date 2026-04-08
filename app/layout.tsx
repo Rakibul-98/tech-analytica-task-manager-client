@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { TooltipProvider } from "../components/ui/tooltip";
 import { SidebarProvider, SidebarTrigger } from "../components/ui/sidebar";
 import { AppSidebar } from "../components/AppSidebar";
+import { Toaster } from "sonner";
+import { Providers } from "./providers/Providers";
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -29,16 +31,13 @@ export default function RootLayout({
       className={cn("h-full", "antialiased", inter.variable, "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col">
+        <Toaster richColors position="top-center" />
         <TooltipProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="min-h-full flex flex-col w-full">
-              <SidebarTrigger />
-              <div className="flex-1">
-                {children}
-              </div>
-            </main>
-          </SidebarProvider>
+          <main className="min-h-full flex flex-col w-full">
+            <div className="flex-1">
+              <Providers>{children}</Providers>
+            </div>
+          </main>
         </TooltipProvider>
       </body>
     </html>

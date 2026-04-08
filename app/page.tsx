@@ -1,8 +1,9 @@
+import LoginPage from "./login/page";
 
 export default function Home() {
   return (
-    <div className="text-xl text-center underline">
-      Hello from next app
+    <div>
+      <LoginPage />
     </div>
   );
 }

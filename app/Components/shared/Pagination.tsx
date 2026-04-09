@@ -58,48 +58,44 @@ export default function Pagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="px-6 py-4 border-t border-gray-200">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div className="text-sm text-gray-700">
-          Showing {startItem} to {endItem} of {totalItems} tasks
-        </div>
+    <div className="px-5 py-3.5 border-t border-slate-100">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+        <p className="text-xs text-slate-500">
+          Showing <span className="font-semibold text-slate-700">{startItem}–{endItem}</span> of <span className="font-semibold text-slate-700">{totalItems}</span> results
+        </p>
 
-        <div className="flex gap-2">
+        <div className="flex items-center gap-1">
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-3 py-1 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 flex items-center gap-1 transition-colors"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-600 border border-slate-200 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-all"
           >
-            <ChevronLeft size={16} />
-            Previous
+            <ChevronLeft size={14} /> Prev
           </button>
 
-          {getPageNumbers().map((pageNum, index) => (
+          {getPageNumbers().map((pageNum, index) =>
             pageNum === '...' ? (
-              <span key={`dots-${index}`} className="px-3 py-1 text-gray-500">
-                ...
-              </span>
+              <span key={`dots-${index}`} className="px-2 py-1.5 text-xs text-slate-400">…</span>
             ) : (
               <button
                 key={pageNum}
                 onClick={() => onPageChange(pageNum as number)}
-                className={`px-3 py-1 border rounded-md transition-colors cursor-pointer ${currentPage === pageNum
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'border-gray-300 hover:bg-gray-50'
+                className={`w-8 h-8 text-xs font-semibold rounded-lg transition-all ${currentPage === pageNum
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-slate-600 border border-slate-200 hover:bg-slate-50'
                   }`}
               >
                 {pageNum}
               </button>
             )
-          ))}
+          )}
 
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-3 py-1 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 flex items-center gap-1 transition-colors cursor-pointer"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-slate-600 border border-slate-200 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-all"
           >
-            Next
-            <ChevronRight size={16} />
+            Next <ChevronRight size={14} />
           </button>
         </div>
       </div>

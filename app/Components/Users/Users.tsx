@@ -4,7 +4,7 @@
 import {
   useGetUsersQuery,
 } from '../../../redux/features/user/userApi';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Users2 } from 'lucide-react';
 import UserTableRow from './UserTableRow';
 import TasksSkeleton from '../Tasks/TasksSkeleton';
 
@@ -39,18 +39,18 @@ export default function Users() {
         isLoading ? (
           <TasksSkeleton />
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
+              <table className="min-w-full ">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-100">
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody>
                   {users.length > 0 ? (
                     users.map((user: any) => (
                       <UserTableRow
@@ -60,8 +60,9 @@ export default function Users() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                        No users found
+                      <td colSpan={4} className="px-5 py-16 text-center">
+                        <Users2 size={36} className="mx-auto text-slate-300 mb-3" />
+                        <p className="text-slate-400 text-sm font-medium">No users found</p>
                       </td>
                     </tr>
                   )}

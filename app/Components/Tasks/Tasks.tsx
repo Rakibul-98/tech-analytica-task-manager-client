@@ -7,7 +7,6 @@ import {
   useUpdateTaskStatusMutation,
   useDeleteTaskMutation
 } from '../../../redux/features/task/taskApi';
-import { Loader2 } from 'lucide-react';
 import { TaskStatus } from '../../../redux/features/task/task.type';
 import {
   handleStatusChange as handleStatusChangeUtil,
@@ -21,6 +20,7 @@ import ViewTaskModal from './ViewTaskModal';
 import TaskTable from './TaskTable';
 import { useAppSelector } from '../../../redux/hooks';
 import TasksSkeleton from './TasksSkeleton';
+import { Plus } from 'lucide-react';
 
 export default function Tasks() {
   const [page, setPage] = useState(1);
@@ -45,39 +45,6 @@ export default function Tasks() {
   const [updateTaskStatus] = useUpdateTaskStatusMutation();
   const [deleteTask] = useDeleteTaskMutation();
 
-  const handleStatusChange = (taskId: string, newStatus: TaskStatus) => {
-    handleStatusChangeUtil(taskId, newStatus, updateTaskStatus);
-  };
-
-  const handleDeleteTask = (taskId: string) => {
-    handleDeleteTaskUtil(taskId, deleteTask);
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    handleSearchUtil(e, setPage);
-  };
-
-  const handleFilterChange = (value: string) => {
-    const validStatus = value as TaskStatus | '';
-    setStatusFilter(validStatus);
-    setPage(1);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleViewTask = (task: any) => {
-    setViewTask(task);
-    setOpenView(true);
-  };
-
-  const handleEditTask = (task: any) => {
-    setEditingTask(task);
-    setOpenEdit(true);
-  };
-
 
   if (isError) {
     return (
@@ -100,51 +67,53 @@ export default function Tasks() {
 
   return (
     <div className="">
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Manage tasks</h1>
-          {
-            isAdmin && <button
-              onClick={() => setOpenCreate(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer"
-            >
-              Create New Task
-            </button>
-          }
-
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900">Tasks</h1>
+          <p className="text-sm text-slate-500 mt-0.5">{totalTasks} task{totalTasks !== 1 ? 's' : ''} total</p>
         </div>
-
+        {isAdmin && (
+          <button
+            onClick={() => setOpenCreate(true)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-colors shadow-sm shadow-indigo-200 cursor-pointer"
+          >
+            <Plus size={16} /> New Task
+          </button>
+        )}
+      </div>
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-5">
         <TaskSearchBar
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
-          onSearchSubmit={handleSearch}
+          onSearchSubmit={(e) => handleSearchUtil(e, setPage)}
           statusFilter={statusFilter}
-          onStatusFilterChange={handleFilterChange}
+          onStatusFilterChange={(v) => { setStatusFilter(v as TaskStatus | ''); setPage(1); }}
           limit={limit}
           setLimit={setLimit}
         />
       </div>
 
 
-
       {
         isLoading ? (
           <TasksSkeleton />
         ) : (
-          <TaskTable
-            tasks={tasks}
-            onStatusChange={handleStatusChange}
-            onDelete={handleDeleteTask}
-            onView={handleViewTask}
-            onEdit={handleEditTask}
-            isLoading={isLoading}
-            showPagination={true}
-            currentPage={page}
-            totalPages={totalPages}
-            totalItems={totalTasks}
-            itemsPerPage={limit}
-            onPageChange={handlePageChange}
-          />
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <TaskTable
+              tasks={tasks}
+              onStatusChange={(id, s) => handleStatusChangeUtil(id, s, updateTaskStatus)}
+              onDelete={(id) => handleDeleteTaskUtil(id, deleteTask)}
+              onView={(t) => { setViewTask(t); setOpenView(true); }}
+              onEdit={(t) => { setEditingTask(t); setOpenEdit(true); }}
+              isLoading={isLoading}
+              showPagination={true}
+              currentPage={page}
+              totalPages={totalPages}
+              totalItems={totalTasks}
+              itemsPerPage={limit}
+              onPageChange={(p) => { setPage(p); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            />
+          </div>
         )
       }
 

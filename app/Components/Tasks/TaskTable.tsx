@@ -5,6 +5,7 @@ import React from 'react';
 import { TaskStatus } from '../../../redux/features/task/task.type';
 import TaskTableRow from './TaskTableRow';
 import Pagination from '../shared/Pagination';
+import { ClipboardList } from 'lucide-react';
 
 interface TaskTableProps {
   tasks: any[];
@@ -46,11 +47,11 @@ const TaskTable: React.FC<TaskTableProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
+    <div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
+        <table className="min-w-full">
+          <thead>
+            <tr className="bg-slate-50 border-b border-slate-100">
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Title
               </th>
@@ -85,8 +86,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                  {emptyMessage}
+                <td colSpan={6} className="px-5 py-16 text-center">
+                  <ClipboardList size={36} className="mx-auto text-slate-300 mb-3" />
+                  <p className="text-slate-400 text-sm font-medium">{emptyMessage}</p>
                 </td>
               </tr>
             )}

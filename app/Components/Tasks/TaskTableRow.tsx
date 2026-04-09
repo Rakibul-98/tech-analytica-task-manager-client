@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Eye, Edit } from 'lucide-react';
+import { Eye, Edit, UserCircle } from 'lucide-react';
 import { TaskStatus } from '../../../redux/features/task/task.type';
 import { formatDateTime, getStatusColor } from '../../utils/task.utils';
 import { useGetUsersQuery } from '../../../redux/features/user/userApi';
@@ -47,55 +47,53 @@ export default function TaskTableRow({
   };
 
   return (
-    <tr className="hover:bg-gray-50 transition-colors">
-      <td className="px-6 py-4">
-        <div className="text-sm font-medium text-gray-900">{task.title}</div>
+    <tr className="hover:bg-gray-50 transition-colors group">
+      <td className="px-5 py-3.5">
+        <span className="text-sm font-semibold text-slate-800">{task.title}</span>
       </td>
       <td className="px-6 py-4">
-        <div className="text-sm text-gray-500 max-w-xs truncate">{task.description || '—'}</div>
+        <div className="text-sm text-gray-500 max-w-50 truncate block">{task.description || '—'}</div>
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">
+      <td className="px-5 py-3.5">
         <select
           value={task.status}
           disabled={isLoading}
           onChange={(e) => onStatusChange(task.id, e.target.value as TaskStatus)}
-          className={`px-2 py-1 text-xs leading-5 font-semibold rounded-full border-0 focus:ring-2 focus:ring-blue-500 cursor-pointer ${getStatusColor(task.status)}`}
+          className={`text-xs text-center font-semibold px-2.5 py-1 rounded-full border-0 cursor-pointer focus:ring-2 focus:ring-indigo-500/30 focus:outline-none appearance-none ${getStatusColor(task.status)}`}
         >
           <option value="PENDING">Pending</option>
           <option value="PROCESSING">Processing</option>
           <option value="DONE">Done</option>
         </select>
       </td>
-      <td className="px-6 py-4">
+      <td className="px-5 py-3.5">
         {task.assignedUser ? (
-          <>
-            <div className="text-sm text-gray-900">{task.assignedUser.name}</div>
-            <div className="text-sm text-gray-500">{task.assignedUser.email}</div>
-          </>
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
+              <UserCircle size={14} className="text-indigo-600" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-800 leading-tight">{task.assignedUser.name}</p>
+              <p className="text-xs text-slate-400">{task.assignedUser.email}</p>
+            </div>
+          </div>
+        ) : isAdmin ? (
+          <select
+            onChange={(e) => handleAssignUser(e.target.value)}
+            defaultValue=""
+            className="text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 text-slate-600 bg-white"
+          >
+            <option value="" disabled>Assign user</option>
+            {usersData?.data?.map((u: any) => (
+              <option key={u.id} value={u.id}>{u.name}</option>
+            ))}
+          </select>
         ) : (
-          isAdmin && (
-            <select
-              onChange={(e) => handleAssignUser(e.target.value)}
-              defaultValue=""
-              className="text-sm border rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="" disabled>
-                Assign user
-              </option>
-              {usersData?.data?.map((user: any) => (
-                <option key={user.id} value={user.id}>
-                  {user.name} ({user.role})
-                </option>
-              ))}
-            </select>
-          )
-        )}
-        {!task.assignedUser && !isAdmin && (
-          <div className="text-sm text-gray-500">Not assigned</div>
+          <span className="text-xs text-slate-400 italic">Unassigned</span>
         )}
       </td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        <div className="text-sm text-gray-900">{formatDateTime(task.createdAt)}</div>
+      <td className="px-5 py-3.5">
+        <span className="text-xs text-slate-500">{formatDateTime(task.createdAt)}</span>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
         <div className="flex justify-center gap-2">

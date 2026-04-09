@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { statusOptions } from '../../utils/task.utils';
+import { Search } from 'lucide-react';
 
 interface TaskSearchBarProps {
   searchTerm: string;
@@ -23,41 +24,34 @@ export default function TaskSearchBar({
   setLimit,
 }: TaskSearchBarProps) {
   return (
-    <div className="flex flex-col md:flex-row gap-4 justify-between">
-      <form onSubmit={onSearchSubmit} className="flex gap-2 flex-1">
+    <div className="flex flex-col sm:flex-row gap-3">
+      <form onSubmit={onSearchSubmit} className="flex-1 relative">
+        <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           type="text"
-          placeholder="Search tasks by title or description..."
+          placeholder="Search by title or description..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
+          className="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all bg-slate-50 focus:bg-white"
         />
       </form>
-
-      <div className="flex gap-2">
+      <div className="flex gap-2.5">
         <select
           value={statusFilter}
           onChange={(e) => onStatusFilterChange(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 cursor-pointer"
+          className="px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 bg-slate-50 text-slate-700 cursor-pointer"
         >
-          {statusOptions.map((option: any) => (
-            <option className='cursor-pointer' key={option.value} value={option.value}>
-              {option.label}
-            </option>
+          {statusOptions.map((opt: any) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
-        <div>
+        <div className="flex items-center gap-2">
           <input
-            id="limit"
-            type="number"
-            min="1"
-            max="100"
-            value={limit}
-
+            type="number" min="1" max="100" value={limit}
             onChange={(e) => setLimit(Number(e.target.value))}
-            className="w-20 px-2 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 text-center"
+            className="w-16 px-2 py-2.5 text-sm text-center border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/30 bg-slate-50"
           />
-          <span className="ms-2 text-gray-600">Per page</span>
+          <span className="text-xs text-slate-500 whitespace-nowrap">per page</span>
         </div>
       </div>
     </div>

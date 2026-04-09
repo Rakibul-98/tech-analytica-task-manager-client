@@ -14,7 +14,6 @@ export default function Dashboard() {
 
   const isAdmin = user?.role === "ADMIN";
 
-
   const { data: tasksData, isLoading } = useGetAllTasksQuery({
     sortOrder: "desc",
   });
@@ -23,15 +22,7 @@ export default function Dashboard() {
     skip: !isAdmin,
   });
 
-  // if (isAdmin && userLoading) {
-  //   return <p>Loading users...</p>
-  // }
-
   const totalUser = isAdmin ? usersData?.meta?.total : 0;
-
-  // if (isLoading) {
-  //   return <p>Loading tasks...</p>
-  // }
 
   const tasks = tasksData;
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CheckCheck, Clock, Layers, Users2 } from "lucide-react";
+import { CheckCircle2, Clock, Layers3, TrendingUp, Users2 } from "lucide-react";
 
 export default function DashboardStats({ tasks, totalUser, isAdmin }: any) {
 
@@ -14,46 +14,70 @@ export default function DashboardStats({ tasks, totalUser, isAdmin }: any) {
   ).length || 0;
 
 
-  const allStats = [
+  const stats = [
     {
       title: "Total Tasks",
       value: totalTask,
-      icon: <Layers size={30} />,
-      showAlways: true
+      icon: Layers3,
+      color: "text-violet-600",
+      bg: "bg-violet-50",
+      border: "border-violet-100",
+      trend: null,
+      show: true,
     },
     {
-      title: "Pending Tasks",
+      title: "Pending",
       value: pendingTasks,
-      icon: <Clock size={30} />,
-      showAlways: true
+      icon: Clock,
+      color: "text-amber-600",
+      bg: "bg-amber-50",
+      border: "border-amber-100",
+      trend: null,
+      show: true,
     },
     {
-      title: "Processing Tasks",
+      title: "In Progress",
       value: processingTasks,
-      icon: <CheckCheck size={30} />,
-      showAlways: true
+      icon: TrendingUp,
+      color: "text-blue-600",
+      bg: "bg-blue-50",
+      border: "border-blue-100",
+      trend: null,
+      show: true,
+    },
+    {
+      title: "Completed",
+      value: (totalTask - processingTasks - pendingTasks),
+      icon: CheckCircle2,
+      color: "text-emerald-600",
+      bg: "bg-emerald-50",
+      border: "border-emerald-100",
+      trend: null,
+      show: true,
     },
     {
       title: "Total Users",
       value: totalUser,
-      icon: <Users2 size={30} />,
-      showAlways: false
-    }
-  ];
-
-  const stats = allStats.filter(stat => stat.showAlways || isAdmin);
+      icon: Users2,
+      color: "text-indigo-600",
+      bg: "bg-indigo-50",
+      border: "border-indigo-100",
+      trend: null,
+      show: isAdmin,
+    },
+  ].filter(s => s.show);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div className={`grid grid-cols-2 ${isAdmin ? 'lg:grid-cols-5' : 'lg:grid-cols-4'} gap-4`}>
       {stats.map((stat, index) => (
-        <div key={index} className="w-full bg-white shadow rounded-sm flex gap-5 items-center p-5">
-          <div className="bg-gray-200 p-3 rounded-md">
-            {stat.icon}
+        <div key={index} className={`bg-white rounded-2xl border ${stat.border} p-5 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow`}>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{stat.title}</span>
+            <div className={`w-8 h-8 rounded-lg ${stat.bg} flex items-center justify-center`}>
+              <stat.icon size={16} className={stat.color} />
+            </div>
           </div>
-          <div>
-            <p className="text-2xl font-semibold">{stat.value}</p>
-            <small className="text-gray-600">{stat.title}</small>
-          </div>
+          <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
         </div>
       ))}
     </div>
